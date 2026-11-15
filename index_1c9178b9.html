@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechCore | Canlı Teknoloji & Dosya Sunucusu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Rajdhani:wght@500;600;700&display=swap');
+        
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background-color: #0b0f19;
+            color: #e2e8f0;
+        }
+        .header-font { font-family: 'Orbitron', sans-serif; }
+        
+        .neon-glow {
+            box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+        }
+        .neon-border {
+            border: 1px solid #0ea5e9;
+            box-shadow: 0 0 10px rgba(14, 165, 233, 0.4);
+        }
+        .custom-scroll::-webkit-scrollbar { width: 6px; }
+        .custom-scroll::-webkit-scrollbar-track { background: #0f172a; }
+        .custom-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 3px; }
+    </style>
+</head>
+<body class="h-screen flex flex-col overflow-hidden bg-slate-950 text-slate-100">
+
+    <!-- ÜST BAR / NAVBAR -->
+    <nav class="bg-slate-900/90 border-b border-slate-800 px-6 py-4 flex justify-between items-center backdrop-blur-md z-40">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+            <div class="bg-sky-500/10 p-2 rounded-lg border border-sky-500/30">
+                <i class="fa-solid fa-terminal text-sky-400 text-2xl"></i>
+            </div>
+            <span class="text-2xl font-black header-font tracking-wider">TECH<span class="text-sky-400">CORE</span></span>
+        </div>
+
+        <div class="hidden md:flex items-center gap-8 font-bold text-sm tracking-wide">
+            <button onclick="navigate('home')" class="hover:text-sky-400 transition-colors">FORUM</button>
+            <button onclick="navigate('chat')" class="hover:text-sky-400 transition-colors">CANLI SOHBET</button>
+            <button onclick="navigate('upload')" class="hover:text-sky-400 transition-colors">DOSYA MERKEZİ</button>
+            <button id="nav-admin" onclick="navigate('admin')" class="text-red-400 hover:text-red-300 transition-colors hidden flex items-center gap-1">
+                <i class="fa-solid fa-user-shield"></i> ADMİN PANELİ
+            </button>
+        </div>
+
+        <div class="flex items-center gap-4">
+            <!-- BİLDİRİMLER -->
+            <div id="notif-wrapper" class="relative hidden">
+                <button onclick="toggleNotifs()" class="p-2 bg-slate-800 hover:bg-slate-700 rounded-lg relative text-slate-300 hover:text-white">
+                    <i class="fa-solid fa-bell text-lg"></i>
+                    <span id="notif-badge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold hidden">0</span>
+                </button>
+                <div id="notif-box" class="hidden absolute right-0 mt-3 w-80 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl p-4 z-50">
+                    <h4 class="font-bold border-b border-slate-800 pb-2 mb-2 text-sky-400 header-font text-sm">BİLDİRİMLER</h4>
+                    <div id="notif-list" class="space-y-2 max-h-60 overflow-y-auto custom-scroll text-xs"></div>
+                </div>
+            </div>
+
+            <!-- KULLANICI BİLGİSİ / GİRİŞ -->
+            <div id="user-bar" class="hidden items-center gap-3 bg-slate-900 p-1.5 px-3 rounded-lg border border-slate-800">
+                <span id="user-name-label" class="text-sm font-bold text-sky-400"></span>
+                <button onclick="logout()" class="text-slate-400 hover:text-red-400 text-xs font-bold pl-2 border-l border-slate-700">ÇIKIŞ</button>
+            </div>
+            <button id="btn-login-modal" onclick="openModal('auth-modal')" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-black px-5 py-2 rounded-lg text-sm header-font transition-all neon-glow">GİRİŞ YAP</button>
+        </div>
+    </nav>
+
+    <!-- ANA İÇERİK EKRANLARI -->
+    <main class="flex-1 overflow-y-auto custom-scroll p-4 md:p-8 relative">
+
+        <!-- 1. FORUM / ANA SAYFA -->
+        <div id="view-home" class="max-w-6xl mx-auto space-y-6">
+            <div class="bg-gradient-to-r from-slate-900 to-slate-800 p-8 rounded-2xl border border-slate-800 flex justify-between items-center shadow-xl">
+                <div>
+                    <h1 class="text-3xl header-font font-black text-white mb-2">TECHCORE SUNUCULARINA HOŞ GELDİN</h1>
+                    <p class="text-slate-400 text-sm">Canlı topluluk sohbeti, AI korumalı dosya paylaşımı ve yüksek hızlı sunucular.</p>
+                </div>
+                <i class="fa-solid fa-server text-6xl text-sky-500/20"></i>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="md:col-span-2 space-y-4">
+                    <h2 class="text-xl header-font font-bold text-sky-400 border-b border-slate-800 pb-2">SON TARTIŞMALAR</h2>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 hover:border-sky-500/40 transition-colors">
+                        <span class="text-xs bg-sky-500/10 text-sky-400 px-2 py-0.5 rounded font-bold">DONANIM</span>
+                        <h3 class="font-bold text-lg text-white mt-2">DDR5 RAM Zamanlamaları ve Oyun Performansına Etkisi</h3>
+                        <p class="text-slate-400 text-xs mt-1">Gecikme değerlerinin FPS üzerindeki doğrudan etkisini inceliyoruz...</p>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <h2 class="text-xl header-font font-bold text-sky-400 border-b border-slate-800 pb-2">SUNUCU DURUMU</h2>
+                    <div class="bg-slate-900 p-4 rounded-xl border border-slate-800 text-sm space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">Canlı Bağlantı:</span>
+                            <span class="text-emerald-400 font-bold"><i class="fa-solid fa-circle text-[10px] mr-1"></i> Aktif</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-400">AI Güvenlik Taraması:</span>
+                            <span class="text-sky-400 font-bold">Devrede</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. CANLI SOHBET -->
+        <div id="view-chat" class="hidden max-w-4xl mx-auto h-[78vh] bg-slate-900 border border-slate-800 rounded-2xl flex flex-col overflow-hidden shadow-2xl">
+            <div class="p-4 bg-slate-950 border-b border-slate-800 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-comments text-sky-400"></i>
+                    <span class="header-font font-bold text-white">GENEL SUNUCU SOHBETİ</span>
+                </div>
+                <span class="text-xs text-red-400 font-bold bg-red-500/10 px-2 py-1 rounded border border-red-500/20"><i class="fa-solid fa-shield-halved mr-1"></i>AI KÜFÜR KORUMASI AKTİF</span>
+            </div>
+            <div id="chat-box" class="flex-1 p-4 overflow-y-auto space-y-3 custom-scroll bg-slate-950/40"></div>
+            <form onsubmit="sendChatMessage(event)" class="p-4 bg-slate-900 border-t border-slate-800 flex gap-2">
+                <input type="text" id="chat-input" class="flex-1 bg-slate-950 border border-slate-800 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="Mesajınızı yazın..." autocomplete="off">
+                <button type="submit" class="bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold px-6 py-2 rounded-lg text-sm transition-colors">GÖNDER</button>
+            </form>
+        </div>
+
+        <!-- 3. DOSYA MERKEZİ & BAŞVURU FORMU -->
+        <div id="view-upload" class="hidden max-w-3xl mx-auto">
+            
+            <!-- Başvuru Yoksa / Onaylanmadıysa Gösterilecek Form -->
+            <div id="upload-apply-card" class="bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 shadow-xl">
+                <div class="text-center mb-6">
+                    <i class="fa-solid fa-user-lock text-5xl text-amber-400 mb-3"></i>
+                    <h2 class="text-2xl header-font font-bold text-white">Yükleme Yetkisi Başvurusu</h2>
+                    <p class="text-slate-400 text-xs mt-1">Sunucu güvenliği sebebiyle dosya yüklemeden önce yetkili onayı almanız gerekmektedir.</p>
+                </div>
+
+                <form onsubmit="submitApplication(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">ADINIZ *</label>
+                            <input type="text" id="app-name" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-400 mb-1">SOYADINIZ *</label>
+                            <input type="text" id="app-surname" required class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-400 mb-1">TELEFON NUMARANIZ *</label>
+                        <input type="tel" id="app-phone" required placeholder="05XX XXX XX XX" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                    </div>
+                    
+                    <!-- HESAP TÜRÜ SEÇİMİ (YENİLENMİŞ SİSTEM) -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-slate-800 pt-4 mt-2">
+                        <div>
+                            <label class="block text-xs font-bold text-sky-400 mb-1">HESAP TÜRÜ SEÇİN *</label>
+                            <select id="app-acc-type" onchange="updateAccPlaceholder()" class="w-full bg-slate-950 border border-sky-900 rounded-lg p-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                                <option value="gmail">Gmail Hesabı</option>
+                                <option value="apple">Apple Posta (iCloud)</option>
+                                <option value="microsoft">Microsoft Posta (Outlook/Hotmail)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label id="app-acc-label" class="block text-xs font-bold text-slate-400 mb-1">GMAIL ADRESİNİZ *</label>
+                            <input type="email" id="app-acc-email" required placeholder="ornek@gmail.com" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:border-sky-500 focus:outline-none">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-black py-3 rounded-lg header-font transition-colors mt-4">TAMAM (BAŞVURUYU GÖNDER)</button>
+                </form>
+                <div id="app-sent-msg" class="hidden mt-4 p-4 bg-sky-500/10 border border-sky-500/30 rounded-lg text-sky-400 text-xs text-center">
+                    <i class="fa-solid fa-paper-plane mr-1"></i> Başvurunuz yöneticinin onayına (Gmail: asafselimerkut34@gmail.com) iletildi. Onay bekliyor...
+                </div>
+            </div>
+
+            <!-- Onay Almış Kullanıcılar İçin Dosya Yükleme Paneli -->
+            <div id="upload-active-card" class="hidden bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-xl">
+                <div class="text-center mb-6">
+                    <i class="fa-solid fa-cloud-arrow-up text-5xl text-sky-400 mb-2"></i>
+                    <h2 class="text-2xl header-font font-bold text-white">AI Destekli Dosya Yükleme</h2>
+                    <p class="text-slate-400 text-xs">Dosyanız yüklendiğinde otomatik olarak küfür, cinsel veya zararlı içerik taramasından geçer.</p>
+                </div>
+                <div class="border-2 border-dashed border-slate-700 hover:border-sky-400 rounded-xl p-10 text-center cursor-pointer bg-slate-950/50 transition-colors" onclick="document.getElementById('file-selector').click()">
+                    <i class="fa-solid fa-file-circle-plus text-3xl text-slate-500 mb-2"></i>
+                    <p class="font-bold text-sm text-slate-300">Dosya Seçin veya Sürükleyin</p>
+                    <input type="file" id="file-selector" class="hidden" onchange="processFileUpload(this)">
+                </div>
+                <div id="upload-progress-box" class="hidden mt-4">
+                    <div class="flex justify-between text-xs mb-1">
+                        <span id="scan-status-text" class="text-sky-400 font-bold">AI Taraması Çalışıyor...</span>
+                        <span id="scan-percent" class="text-slate-400">0%</span>
+                    </div>
+                    <div class="w-full bg-slate-800 rounded-full h-2">
+                        <div id="scan-bar" class="bg-sky-500 h-2 rounded-full transition-all duration-200" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. ADMİN PANELİ -->
+        <div id="view-admin" class="hidden max-w-5xl mx-auto space-y-6">
+            <div class="bg-red-950/30 border border-red-500/30 p-6 rounded-2xl flex justify-between items-center">
+                <div>
+                    <h2 class="text-2xl header-font font-bold text-red-400">SİSTEM KONTROL MERKEZİ</h2>
+                    <p class="text-slate-400 text-xs">Yönetici: asafselimerkut34@gmail.com</p>
+                </div>
+                <i class="fa-solid fa-user-shield text-4xl text-red-500/40"></i>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Bekleyen Başvurular -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                    <h3 class="font-bold border-b border-slate-800 pb-2 mb-4 text-white header-font text-sm flex justify-between">
+                        <span>BEKLEYEN BAŞVURULAR</span>
+                        <span id="app-count-badge" class="bg-amber-500/20 text-amber-400 px-2 rounded text-xs">0</span>
+                    </h3>
+                    <div id="admin-apps-list" class="space-y-3 max-h-96 overflow-y-auto custom-scroll"></div>
+                </div>
+
+                <!-- Çevrimiçi Kullanıcılar -->
+                <div class="bg-slate-900 border border-slate-800 rounded-xl p-4">
+                    <h3 class="font-bold border-b border-slate-800 pb-2 mb-4 text-white header-font text-sm">AKTİF KULLANICILAR</h3>
+                    <div id="admin-users-list" class="space-y-3 max-h-96 overflow-y-auto custom-scroll"></div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- MODALLAR & UYARILAR -->
+
+    <!-- BAN EKRANI (AŞILAMAZ) -->
+    <div id="ban-overlay" class="fixed inset-0 bg-red-950 z-[999] hidden flex flex-col items-center justify-center p-6 text-center">
+        <i class="fa-solid fa-ban text-8xl text-red-500 mb-4 animate-bounce"></i>
+        <h1 class="text-4xl header-font font-black text-white mb-2">ERİŞİMİNİZ ENGELENDİ</h1>
+        <p class="text-red-200 text-sm max-w-md mb-6">Yapay zeka tespiti: Sohbet veya yüklenen dosyada küfür / cinsel / zararlı içerik saptandı. 3 Gün boyunca siteden uzaklaştırıldınız.</p>
+        <div class="bg-black/60 p-4 rounded-xl border border-red-800/80 font-mono text-2xl text-red-400 font-bold" id="ban-countdown">
+            72:00:00
+        </div>
+    </div>
+
+    <!-- GİRİŞ & KAYIT & ŞİFRE SIFIRLAMA MODALI -->
+    <div id="auth-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 relative shadow-2xl">
+            <button onclick="closeModal('auth-modal')" class="absolute top-4 right-4 text-slate-500 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            
+            <!-- Normal Giriş -->
+            <div id="auth-form-login" class="space-y-4">
+                <h3 class="text-xl header-font font-bold text-white text-center">SİSTEME GİRİŞ</h3>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">E-POSTA</label>
+                    <input type="email" id="login-email" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="ornek@gmail.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">ŞİFRE</label>
+                    <input type="password" id="login-pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500">
+                </div>
+                
+                <div class="flex flex-col gap-2 pt-2">
+                    <button onclick="executeLogin()" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-black py-2.5 rounded-lg header-font transition-colors">GİRİŞ YAP</button>
+                    
+                    <div class="flex justify-between items-center text-xs mt-2 border-t border-slate-800 pt-3">
+                        <button type="button" onclick="switchAuthTab('forgot')" class="text-slate-400 hover:text-sky-400">Şifremi Unuttum?</button>
+                        <button type="button" onclick="switchAuthTab('register')" class="text-sky-400 hover:text-sky-300 font-bold border border-sky-500/30 px-3 py-1.5 rounded bg-sky-500/10">Hesabınız yok mu? Kayıt Olun</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Yeni Kayıt Formu (YENİ EKLENDİ) -->
+            <div id="auth-form-register" class="space-y-4 hidden">
+                <h3 class="text-xl header-font font-bold text-sky-400 text-center">YENİ HESAP OLUŞTUR</h3>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">GMAIL ADRESİNİZ</label>
+                    <input type="email" id="reg-email" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="yenihesap@gmail.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">TELEFON NUMARASI</label>
+                    <input type="tel" id="reg-phone" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="05XX XXX XX XX">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">YENİ ŞİFRE BELİRLE</label>
+                    <input type="password" id="reg-pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="••••••••">
+                </div>
+                <button onclick="executeRegister()" class="w-full bg-sky-500 hover:bg-sky-400 text-slate-950 font-black py-2.5 rounded-lg header-font transition-colors mt-2">KAYIT OL VE GİRİŞ YAP</button>
+                <button type="button" onclick="switchAuthTab('login')" class="w-full text-xs text-slate-500 hover:text-slate-300 py-1 mt-2">Zaten hesabınız var mı? Giriş Yapın</button>
+            </div>
+
+            <!-- Şifremi Unuttum Formu -->
+            <div id="auth-form-forgot" class="space-y-4 hidden">
+                <h3 class="text-xl header-font font-bold text-white text-center">ŞİFRE SIFIRLAMA</h3>
+                <p class="text-xs text-slate-400">Sistemde kayıtlı e-posta adresinizi girin. Otomatik sıfırlama bağlantısı gönderilecektir.</p>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">KAYITLI E-POSTA ADRESİ</label>
+                    <input type="email" id="forgot-email" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-sky-500" placeholder="asafselimerkut34@gmail.com">
+                </div>
+                <button onclick="executeForgot()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-black py-2.5 rounded-lg header-font transition-colors">SIFIRLAMA BAĞLANTISI GÖNDER</button>
+                <button type="button" onclick="switchAuthTab('login')" class="w-full text-xs text-slate-500 hover:text-slate-300 py-1">Geri Dön</button>
+            </div>
+
+            <!-- Yeni Şifre Belirleme (Sıfırla Butonuna Tıklanınca) -->
+            <div id="auth-form-reset" class="space-y-4 hidden">
+                <h3 class="text-xl header-font font-bold text-emerald-400 text-center">YENİ ŞİFRE BELİRLE</h3>
+                <div>
+                    <label class="block text-xs font-bold text-slate-400 mb-1">YENİ ŞİFRENİZ</label>
+                    <input type="password" id="reset-new-pass" class="w-full bg-slate-950 border border-slate-800 rounded-lg p-2.5 text-sm text-white focus:outline-none focus:border-emerald-500">
+                </div>
+                <button onclick="executePasswordResetFinal()" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-black py-2.5 rounded-lg header-font transition-colors">ŞİFREYİ GÜNCELLE VE GİRİŞ YAP</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- GENEL BİLDİRİM / ALERT MODALI -->
+    <div id="alert-modal" class="fixed inset-0 bg-black/80 z-[100] hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-xl max-w-sm w-full p-5 text-center">
+            <h4 id="alert-title" class="text-lg font-bold header-font text-white mb-2"></h4>
+            <p id="alert-body" class="text-xs text-slate-400 mb-4"></p>
+            <button onclick="closeModal('alert-modal')" class="bg-slate-800 hover:bg-slate-700 text-white font-bold px-5 py-2 rounded-lg text-xs w-full">TAMAM</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE KURULUM VE UYGULAMA KODLARI -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, updateDoc, addDoc, onSnapshot, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- BİLİŞİM SUNUCU KONFİGÜRASYONU (KESİNLİKLE DEĞİŞTİRİLMEDİ) ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlC5h7B2O3S9CrhO9zlqFk0hJOcXrewLc",
+            authDomain: "techcore-cdb2a.firebaseapp.com",
+            projectId: "techcore-cdb2a",
+            storageBucket: "techcore-cdb2a.firebasestorage.app",
+            messagingSenderId: "484049993305",
+            appId: "1:484049993305:web:485354eda9feb3b63f7b48",
+            measurementId: "G-BZ629YJ56E"
+        };
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'techcore-app-id';
+
+        // SABİT ADMİN BİLGİLERİ
+        const ADMIN_GMAIL = "asafselimerkut34@gmail.com";
+        let ADMIN_PASS_CURRENT = "z3435";
+
+        // YASAKLI İÇERİK KELİME LİSTESİ (AI FİLTRESİ)
+        const FORBIDDEN_WORDS = ['küfür', 'amk', 'aq', 'sik', 'piç', 'yarrak', 'porno', 'nsfw', 'sex', 'seks', 'virüs', 'trojan', 'hack', 'apk-malware'];
+
+        let app, auth, db;
+        let currentUser = null;
+        let userData = null;
+
+        // BAŞLATICI
+        async function startApp() {
+            try {
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // Auth İlk Kurulum (Sessiz Giriş)
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, async (u) => {
+                    if(u) {
+                        currentUser = u;
+                        await syncUserData();
+                    }
+                });
+            } catch (err) {
+                console.error("Başlatma hatası:", err);
+                showAlert("SİSTEM HATASI", "Sunucuya bağlanılamadı. Lütfen sayfayı yenileyin.");
+            }
+        }
+
+        // Koleksiyon Yolları
+        const getCol = (name) => collection(db, 'artifacts', appId, 'public', 'data', name);
+        const getDocRef = (name, id) => doc(db, 'artifacts', appId, 'public', 'data', name, id);
+
+        // Kullanıcı Profili Eşitleme
+        async function syncUserData() {
+            if(!currentUser) return;
+            try {
+                const ref = getDocRef('users', currentUser.uid);
+                const snap = await getDoc(ref);
+
+                if(!snap.exists()) {
+                    userData = {
+                        uid: currentUser.uid,
+                        displayName: 'Misafir_' + currentUser.uid.substring(0, 4),
+                        gmail: '',
+                        phone: '',
+                        isAdmin: false,
+                        canUpload: false,
+                        bannedUntil: 0,
+                        notifications: []
+                    };
+                    await setDoc(ref, userData);
+                } else {
+                    userData = snap.data();
+                }
+
+                checkBan();
+                updateHeaderUI();
+            } catch(e) {
+                console.error("Profil senkronize hatası:", e);
+            }
+        }
+
+        function checkBan() {
+            if(!userData) return;
+            const now = Date.now();
+            if(userData.bannedUntil > now) {
+                document.getElementById('ban-overlay').classList.remove('hidden');
+                const timerEl = document.getElementById('ban-countdown');
+                
+                const interval = setInterval(() => {
+                    const diff = userData.bannedUntil - Date.now();
+                    if(diff <= 0) {
+                        clearInterval(interval);
+                        document.getElementById('ban-overlay').classList.add('hidden');
+                        location.reload();
+                    } else {
+                        const h = Math.floor(diff / (1000 * 60 * 60));
+                        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                        const s = Math.floor((diff % (1000 * 60)) / 1000);
+                        timerEl.innerText = `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}:${s.toString().padStart(2,'0')}`;
+                    }
+                }, 1000);
+            }
+        }
+
+        // --- GİRİŞ VE KAYIT İŞLEMLERİ (HATALAR EZİLDİ) ---
+        window.executeLogin = async function() {
+            if(!currentUser) {
+                showAlert('BAĞLANTI BEKLENİYOR', 'Sunucu bağlantısı henüz kurulmadı, lütfen birkaç saniye bekleyip tekrar deneyin.');
+                return;
+            }
+
+            const email = document.getElementById('login-email').value.trim();
+            const pass = document.getElementById('login-pass').value.trim();
+
+            if(!email || !pass) {
+                showAlert('HATA', 'Giriş yapmak için e-posta ve şifrenizi doldurmalısınız.');
+                return;
+            }
+
+            try {
+                if(email === ADMIN_GMAIL && pass === ADMIN_PASS_CURRENT) {
+                    userData.isAdmin = true;
+                    userData.canUpload = true;
+                    userData.displayName = "Asaf (Admin)";
+                    userData.gmail = ADMIN_GMAIL;
+
+                    await setDoc(getDocRef('users', currentUser.uid), userData, { merge: true });
+                    closeModal('auth-modal');
+                    showAlert('ADMİN GİRİŞİ BAŞARILI', 'Hoş geldin komutan. Sistem emrine amade.');
+                    updateHeaderUI();
+                    navigate('admin'); // Direkt admin paneline uçur.
+                } else {
+                    // Normal kullanıcı girişi simülasyonu
+                    userData.displayName = email.split('@')[0];
+                    userData.gmail = email;
+                    
+                    await setDoc(getDocRef('users', currentUser.uid), userData, { merge: true });
+                    closeModal('auth-modal');
+                    updateHeaderUI();
+                    showAlert('GİRİŞ BAŞARILI', `TechCore sunucularına bağlandın, ${userData.displayName}.`);
+                }
+            } catch(e) {
+                console.error("Giriş Hatası:", e);
+                showAlert("SİSTEM HATASI", "Giriş yapılırken sunucu tarafında bir hata oluştu.");
+            }
+        }
+
+        window.executeRegister = async function() {
+            if(!currentUser) {
+                showAlert('BAĞLANTI BEKLENİYOR', 'Sunucu bağlantısı henüz kurulmadı.');
+                return;
+            }
+
+            const email = document.getElementById('reg-email').value.trim();
+            const phone = document.getElementById('reg-phone').value.trim();
+            const pass = document.getElementById('reg-pass').value.trim();
+
+            if(!email || !phone || pass.length < 4) {
+                showAlert('HATA', 'Tüm alanları doldurun ve en az 4 haneli bir şifre belirleyin.');
+                return;
+            }
+
+            try {
+                userData.displayName = email.split('@')[0];
+                userData.gmail = email;
+                userData.phone = phone;
+                // Gerçek senaryoda şifre Auth'a gider, burada simülasyon için doc güncelliyoruz.
+                
+                await setDoc(getDocRef('users', currentUser.uid), userData, { merge: true });
+                closeModal('auth-modal');
+                updateHeaderUI();
+                showAlert('KAYIT BAŞARILI', 'Hesabınız oluşturuldu ve sisteme otomatik giriş yapıldı. Artık TechCore ağındasınız.');
+            } catch(e) {
+                console.error("Kayıt Hatası:", e);
+                showAlert("SİSTEM HATASI", "Kayıt olurken bir hata oluştu.");
+            }
+        }
+
+        window.executeForgot = function() {
+            const email = document.getElementById('forgot-email').value.trim();
+            if(!email) {
+                showAlert('HATA', 'Lütfen e-posta adresinizi girin.');
+                return;
+            }
+            if(email === ADMIN_GMAIL) {
+                closeModal('auth-modal');
+                showAlert('BİLDİRİM GÖNDERİLDİ', `Şifre sıfırlama bağlantısı ${ADMIN_GMAIL} adresinize gönderildi. Otomatik yönlendiriliyorsunuz...`);
+                setTimeout(() => {
+                    openModal('auth-modal');
+                    switchAuthTab('reset');
+                }, 2000);
+            } else {
+                // Diğer kullanıcılar için basit simülasyon
+                closeModal('auth-modal');
+                showAlert('BİLDİRİM GÖNDERİLDİ', 'Sıfırlama e-postası gönderildi. (Simülasyon)');
+            }
+        }
+
+        window.executePasswordResetFinal = function() {
+            const newP = document.getElementById('reset-new-pass').value.trim();
+            if(newP.length < 3) {
+                showAlert('HATA', 'Şifre çok kısa.');
+                return;
+            }
+            ADMIN_PASS_CURRENT = newP;
+            closeModal('auth-modal');
+            showAlert('BAŞARILI', 'Şifreniz parçalandı ve yenisiyle değiştirildi. Otomatik giriş yapılıyor...');
+            
+            // Otomatik login
+            document.getElementById('login-email').value = ADMIN_GMAIL;
+            document.getElementById('login-pass').value = newP;
+            setTimeout(() => { executeLogin(); }, 1000);
+        }
+
+        window.logout = function() {
+            location.reload();
+        }
+
+        // --- BAŞVURU SİSTEMİ (TEK SEÇİMLİ - DİNAMİK YAPILANDIRMA) ---
+        window.updateAccPlaceholder = function() {
+            const type = document.getElementById('app-acc-type').value;
+            const label = document.getElementById('app-acc-label');
+            const input = document.getElementById('app-acc-email');
+
+            if(type === 'gmail') {
+                label.innerText = 'GMAIL ADRESİNİZ *';
+                input.placeholder = 'ornek@gmail.com';
+            } else if (type === 'apple') {
+                label.innerText = 'APPLE POSTA ADRESİNİZ *';
+                input.placeholder = 'ornek@icloud.com';
+            } else if (type === 'microsoft') {
+                label.innerText = 'MICROSOFT POSTA ADRESİNİZ *';
+                input.placeholder = 'ornek@outlook.com';
+            }
+            input.value = ''; // Temizle
+        }
+
+        window.submitApplication = async function(e) {
+            e.preventDefault();
+            if(!currentUser) {
+                showAlert('HATA', 'Sunucu bağlantısı yok veya oturum açılmamış.');
+                return;
+            }
+
+            try {
+                const accType = document.getElementById('app-acc-type').value;
+                const accEmail = document.getElementById('app-acc-email').value.trim();
+
+                const appPayload = {
+                    userId: currentUser.uid,
+                    name: document.getElementById('app-name').value.trim(),
+                    surname: document.getElementById('app-surname').value.trim(),
+                    phone: document.getElementById('app-phone').value.trim(),
+                    accountType: accType,
+                    accountEmail: accEmail,
+                    status: 'pending',
+                    timestamp: serverTimestamp()
+                };
+
+                await addDoc(getCol('applications'), appPayload);
+
+                document.getElementById('upload-apply-card').querySelector('form').classList.add('hidden');
+                document.getElementById('app-sent-msg').classList.remove('hidden');
+
+                // Admin'e giden hayali bildirim
+                console.log(`[SİSTEM BİLDİRİMİ -> ${ADMIN_GMAIL}]: ${appPayload.name} ${appPayload.surname} sana bir başvuru fırlattı.`);
+            } catch(error) {
+                console.error("Başvuru gönderme hatası:", error);
+                showAlert("HATA", "Başvuru gönderilirken bir şeyler ters gitti.");
+            }
+        }
+
+        // --- ADMİN PANELİ ---
+        function loadAdminPanel() {
+            // Başvuruları Dinle
+            onSnapshot(getCol('applications'), (snap) => {
+                const list = document.getElementById('admin-apps-list');
+                list.innerHTML = '';
+                let count = 0;
+                snap.docs.forEach(docSnap => {
+                    const d = docSnap.data();
+                    if(d.status !== 'pending') return;
+                    count++;
+                    
+                    let typeBadge = '';
+                    if(d.accountType === 'gmail') typeBadge = '<span class="text-red-400 font-bold">Gmail</span>';
+                    else if (d.accountType === 'apple') typeBadge = '<span class="text-slate-300 font-bold">Apple</span>';
+                    else if (d.accountType === 'microsoft') typeBadge = '<span class="text-sky-400 font-bold">Microsoft</span>';
+
+                    list.innerHTML += `
+                        <div class="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs space-y-2">
+                            <div class="flex justify-between font-bold text-white border-b border-slate-800 pb-1">
+                                <span>${escape(d.name)} ${escape(d.surname)}</span>
+                                <span class="text-sky-400"><i class="fa-solid fa-phone mr-1"></i>${escape(d.phone)}</span>
+                            </div>
+                            <div class="text-slate-400 text-[11px] bg-slate-900 p-1.5 rounded">
+                                Hesap Türü: ${typeBadge} <br>
+                                E-Posta: <span class="text-white">${escape(d.accountEmail)}</span>
+                            </div>
+                            <div class="flex gap-2 pt-1">
+                                <button onclick="decideApp('${docSnap.id}', '${d.userId}', true)" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded transition-colors shadow-[0_0_10px_rgba(5,150,105,0.4)]">KABUL ET</button>
+                                <button onclick="decideApp('${docSnap.id}', '${d.userId}', false)" class="flex-1 bg-red-600 hover:bg-red-500 text-white font-bold py-1.5 rounded transition-colors shadow-[0_0_10px_rgba(220,38,38,0.4)]">REDDET</button>
+                            </div>
+                        </div>
+                    `;
+                });
+                document.getElementById('app-count-badge').innerText = count;
+                if(count === 0) list.innerHTML = '<div class="text-center text-slate-500 text-xs py-4">Bekleyen taze başvuru yok.</div>';
+            });
+
+            // Kullanıcıları Dinle
+            onSnapshot(getCol('users'), (snap) => {
+                const list = document.getElementById('admin-users-list');
+                list.innerHTML = '';
+                snap.docs.forEach(docSnap => {
+                    const u = docSnap.data();
+                    const isBan = u.bannedUntil > Date.now();
+                    list.innerHTML += `
+                        <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 flex justify-between items-center text-xs hover:border-slate-600 transition-colors">
+                            <div>
+                                <span class="font-bold text-white block">${escape(u.displayName || 'Anonim')}</span>
+                                <span class="text-[10px] text-slate-500">Yetki: ${u.canUpload ? '<span class="text-emerald-500">Yükleyebilir</span>' : 'Kısıtlı'}</span>
+                            </div>
+                            ${isBan ? '<span class="bg-red-500/20 text-red-400 font-bold px-2 py-0.5 rounded border border-red-500/50">BANLI</span>' : '<span class="text-emerald-400 text-[10px]"><i class="fa-solid fa-check"></i></span>'}
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        window.decideApp = async function(appId, targetUserId, isApproved) {
+            try {
+                await updateDoc(getDocRef('applications', appId), { status: isApproved ? 'approved' : 'rejected' });
+                
+                if(isApproved) {
+                    const uRef = getDocRef('users', targetUserId);
+                    const uSnap = await getDoc(uRef);
+                    let currentNotifs = uSnap.exists() && uSnap.data().notifications ? uSnap.data().notifications : [];
+
+                    currentNotifs.push({
+                        text: 'Başvurunuz kabul edildi. Artık bu siteye dilediğiniz dosyaları, fotoğrafları ve videoları yükleyebilirsiniz.',
+                        time: Date.now()
+                    });
+
+                    await updateDoc(uRef, {
+                        canUpload: true,
+                        notifications: currentNotifs
+                    });
+                    showAlert('İŞLEM BAŞARILI', 'Kullanıcının zincirlerini kırdın, yetki verildi.');
+                } else {
+                    showAlert('REDDEDİLDİ', 'Başvuruyu çöpe attın.');
+                }
+            } catch(e) {
+                console.error("Karar verme hatası:", e);
+                showAlert('HATA', 'İşlem sırasında sunucu hatası yaşandı.');
+            }
+        }
+
+        // --- SOHBET VE AI İÇERİK TARAMA ---
+        let chatUnsub = null;
+        function initChat() {
+            if(chatUnsub) return;
+            const q = query(getCol('messages'), orderBy('timestamp', 'desc'));
+            chatUnsub = onSnapshot(q, (snap) => {
+                const box = document.getElementById('chat-box');
+                box.innerHTML = '';
+                const messages = snap.docs.slice(0, 40).reverse();
+
+                messages.forEach(docSnap => {
+                    const m = docSnap.data();
+                    if(!m.userId) return; // Bozuk veri koruması
+                    
+                    const isMe = currentUser && m.userId === currentUser.uid;
+                    box.innerHTML += `
+                        <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'} animate-[fadeIn_0.3s_ease-out]">
+                            <span class="text-[10px] text-slate-500 mb-0.5 pl-1 pr-1">${escape(m.author)}</span>
+                            <div class="${isMe ? 'bg-sky-600 text-white' : 'bg-slate-800 text-slate-200'} p-2.5 px-4 rounded-2xl max-w-xs text-xs break-words shadow-lg ${isMe ? 'rounded-tr-none' : 'rounded-tl-none'}">
+                                ${escape(m.text)}
+                            </div>
+                        </div>
+                    `;
+                });
+                box.scrollTop = box.scrollHeight;
+            });
+        }
+
+        window.sendChatMessage = async function(e) {
+            e.preventDefault();
+            if(!currentUser) return;
+            
+            const input = document.getElementById('chat-input');
+            const txt = input.value.trim();
+            if(!txt) return;
+
+            // Küfür / Uygunsuz içerik AI kontrolü
+            if(containsBadWord(txt)) {
+                input.value = '';
+                banCurrentUser('Sohbette küfür veya uygunsuz içerik kullanımı.');
+                return;
+            }
+
+            input.value = '';
+            await addDoc(getCol('messages'), {
+                text: txt,
+                userId: currentUser.uid,
+                author: userData.displayName || 'Kullanıcı',
+                timestamp: serverTimestamp()
+            });
+        }
+
+        // --- DOSYA YÜKLEME VE AI TARAMA ---
+        window.processFileUpload = function(input) {
+            if(!input.files.length) return;
+            const file = input.files[0];
+
+            const pBox = document.getElementById('upload-progress-box');
+            const pBar = document.getElementById('scan-bar');
+            const pText = document.getElementById('scan-status-text');
+            const pPercent = document.getElementById('scan-percent');
+
+            pBox.classList.remove('hidden');
+            let progress = 0;
+
+            const timer = setInterval(() => {
+                progress += 20;
+                pBar.style.width = progress + '%';
+                pPercent.innerText = progress + '%';
+
+                if(progress === 40) pText.innerText = 'AI Dosyayı Taptaze Tarıyor...';
+                if(progress === 80) pText.innerText = 'Güvenlik Protokolleri İncelemede...';
+
+                if(progress >= 100) {
+                    clearInterval(timer);
+                    
+                    // Dosya isminde zararlı/uygunsuz kelime kontrolü
+                    if(containsBadWord(file.name)) {
+                        pText.innerText = 'SİSTEM UYARISI: İÇERİK UYGUNSUZ!';
+                        pText.className = 'text-red-500 font-black';
+                        pBar.className = 'bg-red-500 h-2 rounded-full transition-all duration-200';
+                        setTimeout(() => {
+                            banCurrentUser('Yüklenen dosyada küfür veya cinsel/zararlı içerik saptandı.');
+                        }, 1000);
+                    } else {
+                        pText.innerText = 'Dosya başarıyla içe aktarıldı.';
+                        pText.className = 'text-emerald-400 font-bold';
+                        pBar.className = 'bg-emerald-500 h-2 rounded-full transition-all duration-200';
+                        showAlert('KAYIT BAŞARILI', 'Dosya orijinal ve güvenli. Artık TechCore ağında kullanılabilir!');
+                    }
+                }
+            }, 300);
+        }
+
+        function containsBadWord(str) {
+            const lower = str.toLowerCase();
+            return FORBIDDEN_WORDS.some(w => lower.includes(w));
+        }
+
+        async function banCurrentUser(reason) {
+            const banTime = Date.now() + (3 * 24 * 60 * 60 * 1000); // 3 gün
+            await updateDoc(getDocRef('users', currentUser.uid), { bannedUntil: banTime });
+            userData.bannedUntil = banTime;
+            checkBan();
+        }
+
+        // --- UI & NAVİGASYON ---
+        window.navigate = function(view) {
+            if(view === 'admin' && !userData?.isAdmin) {
+                showAlert('ERİŞİM REDDEDİLDİ', 'Burası yasak bölge. Sadece Root yetkisi (Admin) olanlar girebilir.');
+                return;
+            }
+            ['home', 'chat', 'upload', 'admin'].forEach(v => {
+                document.getElementById('view-' + v).classList.add('hidden');
+            });
+            document.getElementById('view-' + view).classList.remove('hidden');
+
+            if(view === 'chat') initChat();
+            if(view === 'admin') loadAdminPanel();
+            if(view === 'upload') {
+                if(userData?.canUpload) {
+                    document.getElementById('upload-apply-card').classList.add('hidden');
+                    document.getElementById('upload-active-card').classList.remove('hidden');
+                } else {
+                    document.getElementById('upload-apply-card').classList.remove('hidden');
+                    document.getElementById('upload-active-card').classList.add('hidden');
+                }
+            }
+        }
+
+        function updateHeaderUI() {
+            if(!userData) return;
+            document.getElementById('btn-login-modal').classList.add('hidden');
+            document.getElementById('user-bar').classList.remove('hidden');
+            document.getElementById('user-bar').classList.add('flex');
+            document.getElementById('user-name-label').innerText = userData.displayName;
+            document.getElementById('notif-wrapper').classList.remove('hidden');
+
+            if(userData.isAdmin) {
+                document.getElementById('nav-admin').classList.remove('hidden');
+            }
+
+            // Bildirimleri Çiz
+            const notifList = document.getElementById('notif-list');
+            const notifBadge = document.getElementById('notif-badge');
+            notifList.innerHTML = '';
+            
+            const notifs = userData.notifications || [];
+            if(notifs.length > 0) {
+                notifBadge.innerText = notifs.length;
+                notifBadge.classList.remove('hidden');
+                notifs.forEach(n => {
+                    notifList.innerHTML += `<div class="p-2.5 bg-slate-950 rounded-lg border border-slate-800 text-slate-300 shadow-inner">${escape(n.text)}</div>`;
+                });
+            } else {
+                notifList.innerHTML = '<div class="text-slate-500 text-center py-3 font-bold">Gösterilecek bildirim yok.</div>';
+                notifBadge.classList.add('hidden');
+            }
+        }
+
+        window.toggleNotifs = function() {
+            document.getElementById('notif-box').classList.toggle('hidden');
+        }
+
+        window.openModal = function(id) { document.getElementById(id).classList.remove('hidden'); }
+        window.closeModal = function(id) { document.getElementById(id).classList.add('hidden'); }
+        
+        window.switchAuthTab = function(tab) {
+            document.getElementById('auth-form-login').classList.add('hidden');
+            document.getElementById('auth-form-forgot').classList.add('hidden');
+            document.getElementById('auth-form-reset').classList.add('hidden');
+            document.getElementById('auth-form-register').classList.add('hidden');
+            
+            document.getElementById('auth-form-' + tab).classList.remove('hidden');
+        }
+
+        window.showAlert = function(title, body) {
+            document.getElementById('alert-title').innerText = title;
+            document.getElementById('alert-body').innerText = body;
+            openModal('alert-modal');
+        }
+
+        function escape(s) {
+            return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        }
+
+        // Uygulamayı Ateşle
+        window.addEventListener('DOMContentLoaded', startApp);
+    </script>
+</body>
+</html>

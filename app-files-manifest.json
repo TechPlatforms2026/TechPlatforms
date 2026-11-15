@@ -1,0 +1,75 @@
+{
+  "generatedAt": 1794754674610,
+  "rootFingerprint": "859ba6b48ba20dac10f59fac47c7b5263510a779dcab2d8a8b81735d9b0acca5",
+  "source": "dist-bundle",
+  "files": {
+    "/.well-known/assetlinks.json": {
+      "sha256": "3bb62cc49c9d24dd45d51305be1fefeb68c43c9e6db0b3e0189581907c65054e",
+      "size": 324
+    },
+    "/apple-touch-icon.png": {
+      "sha256": "3c4183e7855f908ef442d4e0a7d7f6b0e9113f0f468d436684f7fa13c18ead82",
+      "size": 5096
+    },
+    "/assets/aistudio/googleb9b8a25f8268b525_0132aaec.html": {
+      "sha256": "0132aaecaa6780e3f986c7589cc88dc225e7a0d6e28ed369b88f75c5a6ad3d6f",
+      "size": 53
+    },
+    "/assets/aistudio/index_1c9178b9.html": {
+      "sha256": "1c9178b9f911318108cb24620d81996a17307c7808a745e733934ed4d49f379e",
+      "size": 49518
+    },
+    "/assets/hero_tech_docs_studio_1794730975874-BFHTrpO-.jpg": {
+      "sha256": "bb5186d7a70d130be752e0c43f525464ffc909c96298ec270db51806559a9eef",
+      "size": 640228
+    },
+    "/assets/hero_tech_games_arcade_1794730974437-CDteWN83.jpg": {
+      "sha256": "84fdd7d047599a95582028efea41382c90d206f1ed26e26b34fc74e0d90d48e0",
+      "size": 781568
+    },
+    "/assets/hero_techcore_server_1794634839930-B_YwiGXF.jpg": {
+      "sha256": "b4e918dd358ecbed85aa80c5461a1fc67b8ad36c841e582c6633abdab484eb25",
+      "size": 720773
+    },
+    "/assets/index-CdsweBJa.css": {
+      "sha256": "4132b4bd49294de120f5b486c4c8cf2ac057f449be7139c38ab96b025fb24db2",
+      "size": 56656
+    },
+    "/assets/index-Dl6vP89D.js": {
+      "sha256": "305b7d78c3603ea632035b98135ed54bf00a487c4a660aee5427eb85fe807661",
+      "size": 571379
+    },
+    "/googleb9b8a25f8268b525.html": {
+      "sha256": "f138be6c6c14ee6b23b0d152dbf5926f15643b97111f7615215cd551866a9de0",
+      "size": 54
+    },
+    "/icon.svg": {
+      "sha256": "9907ad6669899ca956cab27e153c273f017ef10b418940ac56ed8ed5ddbdf692",
+      "size": 462
+    },
+    "/index.html": {
+      "sha256": "62bf4113c91aad39e8beb86fa6a13ff23c4cc9c4c822a20dbbcdd042b8154f1b",
+      "size": 2096
+    },
+    "/manifest.webmanifest": {
+      "sha256": "13208d515390d1f4d0c22b48e75f02cee439c17b2844481c2d9448bfc2650ef2",
+      "size": 1090
+    },
+    "/pwa-192x192.png": {
+      "sha256": "9e7d123742d731e4772e55f6beae46fd9f1a5a986a4eb75bb569a71cc61586fa",
+      "size": 6668
+    },
+    "/pwa-512x512.png": {
+      "sha256": "f26aad30f673e18a1e480748406275061f2f69d959d4c716ddc2adf9443db7a4",
+      "size": 20359
+    },
+    "/pwa-maskable-512x512.png": {
+      "sha256": "cf80875dcf15257a903b71e3c38a4f1f1b3e10b771d0cedd7febe95f5f83df3a",
+      "size": 12235
+    },
+    "/registerSW.js": {
+      "sha256": "9742073ef7fc795e7673d98f272992843298426a0ffd8cb3507784df5143608b",
+      "size": 134
+    }
+  }
+}
